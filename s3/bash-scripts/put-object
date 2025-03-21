@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+#stop everything if anything fail?
+set -e
+
+echo "== Put Objects =="
+if [ -z "$1" ]; then
+    echo "There needs to be a bucket name in param"
+    exit 1
+fi
+
+if [ -z "$2" ]; then
+    echo "There needs to be a File Prefix name in param"
+    exit 1
+fi
+
+BUCKET_NAME=$1
+FILEPATH=$2
+FILE_NAME=$(basename "${FILEPATH}")
+
+aws s3api put-object \
+    --bucket ${BUCKET_NAME} \
+    --body ${FILEPATH} \
+    --key ${FILE_NAME}

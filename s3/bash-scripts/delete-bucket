@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+echo "== Delete bucket =="
+
+if [ -z "$1" ]; then
+    echo "-- In order to create a bucket need to pass bucket name as param eg. ./create-bucket [my-bucket-name]"
+    exit 1
+fi
+
+BUCKET_NAME=$1
+
+aws s3api delete-bucket \
+    --bucket $BUCKET_NAME \
+    --output text

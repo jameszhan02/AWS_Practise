@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+#stop everything if anything fail?
+set -e
+
+echo "== Sync Objects =="
+
+if [ -z "$1" ]; then
+    echo "There needs to be a bucket name in param"
+    exit 1
+fi
+
+if [ -z "$2" ]; then
+    echo "There needs to be a File Prefix name in param"
+    exit 1
+fi
+
+BUCKET_NAME=$1
+FILENAME_PREFIX=$2
+
+OUTPUT_DIR="/tmp/s3-bash-scripts"
+
+rm -r $OUTPUT_DIR
+# Create the output folder
+mkdir -p $OUTPUT_DIR
+
+#randomly create a number of files.
+NUM_FILES=$((RANDOM % 6 + 5))
+
+#make direction
+echo "-- $((NUM_FILES - 1)) files will be generate --"
+mkdir -p $OUTPUT_DIR
+
+for ((i = 1; i < $NUM_FILES; i++)); do
+    #generate a random filename
+    random_filename="${OUTPUT_DIR}/${FILENAME_PREFIX}file_${i}.txt"
+
+    dd if=/dev/urandom of="$random_filename" bs=1024 count=$((RANDOM % 1024 + 1)) 2>/dev/null
+done
+
+tree $OUTPUT_DIR
+
+aws s3 sync ${OUTPUT_DIR} s3://${BUCKET_NAME}/${FILENAME_PREFIX}

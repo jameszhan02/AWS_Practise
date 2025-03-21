@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+echo "== list buckets =="
+#jq is a lib for cmd to sort the json res
+# Example data sturcture looks like
+# {
+#     "Buckets": [
+#         {
+#             "Name": "example-bucket-sean-zhan-sillyknight02",
+#             "CreationDate": "2025-03-15T22:38:46+00:00"
+#         }
+#     ],
+#     "Owner": {
+#         "ID": "5c2846a25aae3a32d860099da5dfea405f4050c5d5950c49481d99c28ada1ef4"
+#     },
+#     "Prefix": null
+# }
+
+aws s3api list-buckets | jq -r '.Buckets | sort_by(.CreationDate) | reverse | .[] | .Name'
